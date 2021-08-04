@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t docker_rajhasti -f Dockerfile.dev .
+
+script:
+    - docker run -e CI=true docker_rajhasti npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$SECRET_ACCESS_KEY"
+  region: "us-east-1"
+  app: "docker-rajhasti"
+  env: "Dockerrajhasti-env"
+  bucket_name: "elasticbeanstalk-us-east-1-790377356516"
+  bucker_path: "docker-rajhasti"
+  on:
+      branch: master
